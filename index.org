@@ -1,0 +1,508 @@
+#+LANGUAGE: es
+#+CATEGORY:
+#+TAGS: 
+#+DESCRIPTION: Acometer un proyecto en Medialab-Prado
+#+TITLE: Operaciones lógicas con datos
+#+DATE: [2016-10-26 mié 17:00]
+#+AUTHOR: Adolfo A. Bravo y Pilar J. López
+#+EMAIL: adolfo@medialab-prado.es pilarjlopez@hotmail.com
+#+OPTIONS: todo:nil pri:nil tags:nil ^:nil 
+
+#+OPTIONS: reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t
+#+OPTIONS: reveal_mathjax:t reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+OPTIONS: toc:nil
+#+REVEAL_MARGIN: 0.1
+#+REVEAL_MIN_SCALE: 0.5
+#+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_TRANS: linear
+#+REVEAL_THEME: sky
+#+REVEAL_HLEVEL: 2
+#+REVEAL_HEAD_PREAMBLE: <meta name="description" content="Org-Reveal Introduction.">
+#+REVEAL_POSTAMBLE: <p> Creado por adolflow. </p>
+#+REVEAL_PLUGINS: (highlight markdown notes)
+#+REVEAL_ROOT: file:///home/flow/ownCloud/docs/softwarelibre/emacs/reveal.js/
+#+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
+
+* Necesidades previas
+- Disponer de un ordenador con sistema operativo sobre el que tengamos
+  permisos de superusuario.
+- Manejo del entorno de escritorio
+- Instalación y desinstalación de programas
+- Resolución de problemas
+- Conocimiento del árbol de directorios. Rutas y enlaces simbólicos
+- Manejo de versiones
+
+* Fundamental
+- Conocimiento de la arquitectura hardware del ordenador.
+- Conocimiento de la estructura del sistema operativo.
+- Uso de la terminal, consola Unix.
+- Manejar la estructura de ficheros.
+- Distinguir entre rutas absolutas y relativas.
+- Nociones de las distintas codificaciones de caracteres.
+- Qué tipos de datos hay
+- Qué tipos de formatos de datos hay.
+- Usuarios y grupos
+
+* Opcional
+
+- Atajos de teclado.
+- Conocer la Web: navegador, lenguaje HTML, programas, utilidades,
+  atajos, buscadores.
+- Git
+- Nociones de periodismo de datos: investigación, datos y
+  visualización.
+
+* Programación
+** Lenguajes informáticos
+** Estructura
+#+BEGIN_EXAMPLE
+Sujeto Predicado Objeto
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+Función Variable Argumento
+#+END_EXAMPLE
+** Tipos de datos
+- Números enteros o /integers/
+- Decimales, flotantes o /floats/
+- Cadenas -de caracteres- o /strings/
+- Booleanos: verdades o falso
+- Otros objetos
+** Algunos símbolos
+- =\n=, línea nueva
+- =\b=, backspace
+- =\r=, retorno de carro.
+- =\t=, tabulador
+- =\f=, formfeed
+- =\e=, espacio
+- =\\=, barra invertida
+- =\"=, comillas
+- =\000=, carácter octal.
+
+* Herramientas
+- Compresor: [[http://7-zip.org][7-zip]]
+- Consola: [[https://www.cygwin.com/][Cygwin]]
+- Editor: [[https://blog.infotics.es/2015/11/11/editor-de-textos/][Emacs]], Notepad++, Sublime, Atom...
+- Navegador: Firefox y Chrome
+
+** Configuración Cygwin
+http://stackoverflow.com/questions/1494658/how-can-i-change-my-cygwin-home-folder-after-installation
+
+Según comentan ahí, hay que añadir la variable =db_home= a
+ =/etc/nsswitch.conf= con la información =windows= para tener el
+ directorio de usuarix de Windows como =home=, es decir:
+
+#+BEGIN_EXAMPLE
+db_home: windows
+#+END_EXAMPLE
+
+O de forma equivalente:
+
+#+BEGIN_EXAMPLE
+db_home: /%H
+#+END_EXAMPLE
+
+De esta última manera puedes interpretar el esquema y hacer que estén
+dentro del subdirectorio =cygwin=, por ejemplo:
+
+#+BEGIN_EXAMPLE
+db_home: /%H/cygwin
+#+END_EXAMPLE
+
+En esta [[http://stackoverflow.com/questions/225764/safely-change-home-directory][página]] proponen otro método:
+
+#+BEGIN_SRC sh
+mkpasswd -l -p "$(cygpath -H)" > /etc/passwd
+#+END_SRC
+
+
+** Emacs
+Se puede [[https://www.gnu.org/software/emacs/download.html][descargar]] y utilizar tanto en Linux, Windows o
+Mac. Podemos descargarlo desde:
+- [[http://ftp.gnu.org/gnu/emacs][ftp de Emacs]]
+- [[https://www.gnu.org/order/ftp.html][elegir un mirror]]
+- dejar que nos sugieran el mirror [[http://ftpmirror.gnu.org/emacs/][más cercano a nuestra ubicación.]]
+
+** Markdown
+
+- [[https://github.com/flowsta/markdown][Mis apuntes de Markdown]]
+- [[http://docs.podigee.com/guides/markdown-cheatsheet.html][Markdown Cheatsheet]]
+- [[https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-spanish.pdf][R Markdown Cheatsheet: R, Markdown y YAML]]
+
+* Explorador de archivos
+** ls
+=ls [opciones]= lista los archivos del punto en el que nos encontramos.
+- =-a=, lista todos los archivos.
+- =-l=, lista en formato largo
+** pwd
+=pwd= imprime la ruta absoluta del sistema donde nos encontramos.
+** mkdir
+=mkdir [opciones] [nombre-directorio]=, /make directory/, crea un directorio
+- =-p=, make parents
+** cd
+=cd [ruta]=, /change directory/, cambia al directorio elegido. Podemos escribir la ruta absoluta o bien con atajos:
+- =cd=, vamos a la home del usuario
+- =cd .=, vamos al directorio en el que estamos.
+- =cd ..=, vamos al directorio superior
+- =cd ~=, vamos al directorio home del usuario.
+Con esos atajos también podemos construir rutas, por ejemplo, con =cd ~/Documentos= vamos al directorio Documentos del usuario con el que estamos.
+** touch
+=touch [archivo]=, crea archivo vacío
+** cp
+=cp [opciones] [origen] [destino]=
+- =cp -r= copia los directorios recursivamente
+** mv
+=mv [origen] [destino]=
+* wc
+
+Responde a /word count/, contar palabras.
+
+El esquema de uso sería:
+#+BEGIN_SRC 
+wc [opciones] archivo
+
+#+END_SRC
+
+Algunas opciones son:
+- =-l=, cuenta líneas
+- =-c=, cuenta bytes
+- =-m=, cuenta carácteres
+- =-w=, cuenta palabras
+
+** Ejemplo
+
+#+BEGIN_SRC sh :results html
+wc rera_aragon.csv
+
+#+END_SRC
+
+Lo cual nos da las líneas, palabras y bytes que tiene.
+
+** Contar líneas
+Si queremos contar solo las líneas, lo haremos con la opción =-l=:
+
+#+BEGIN_SRC sh :results html
+wc -l rera_aragon.csv
+
+#+END_SRC
+
+** Saber el tamaño (contar los bytes)
+
+#+BEGIN_SRC sh :results html
+wc -c rera_aragon.csv
+
+#+END_SRC
+
+** Contar las palabras
+
+#+BEGIN_SRC sh :results html
+wc -w rera_aragon.csv
+
+#+END_SRC
+
+** Contar número de caracteres
+
+
+#+BEGIN_SRC sh :results html
+wc -m rera_aragon.csv
+
+#+END_SRC
+
+* Atajos a procesos
+
+- =CTRL + C=, mata el proceso
+- =CTRL + Z=, para el proceso
+- =CTRL + D=, fin del archivo
+
+* Entrada Salida I/O
+
+** Redirección de =STDOUT= a un archivo:
+- =comando > archivo=, sobreescribe el archivo
+- =comando >> archivo=, añade al final del archivo
+** Redirección de =STDIN= a un archivo
+- =comando < archivo=
+** Redirección, entubar un comando con otro
+=comando1 | comando2 | comando3=
+
+* Comodines
+- =*=, para cualquier número de caracteres
+- =?=, para un carácter
+
+* Procesos
+- =top=, sirve para ver qué procesos consumen más.
+- =ps [comando]= informa de los procesos de ese comando.
+ - =ps -f=, lista completa
+ - =ps -e=, muestra todos los procesos
+ - =ps aux | grep [comando]=, muestra los procesos de ese comando
+- =comando &=, corre proceso por detrás.
+- =jobs=, muestra procesos que corren por detrás
+- =kill señal numero-proceso=, manda la señal determinada a ese proceso
+- =killall comando=, mata todos los procesos de ese comando
+
+* Permisos
+- Los archivos/directorios pertenecen al usuario, del grupo y de otros
+- Las opciones de cada cual son lectura =r= /read/, escritura =w= /write/ y ejecución =x= /execute/
+- =u=, por /user/, usuario
+- =g=, por /group/, grupo
+- =o=, por /others/, otros
+- =a=, por /all/, todos
+- =chmod [opciones] [modo] [destino]=, /change mode/, cambia permisos.
+- =R=, afecta recursivamente.
+- Por ejemplo:
+#+BEGIN_SRC 
+chmod +rx
+
+#+END_SRC
+Cambia los permisos a lectura y escritura para todos.
+#+BEGIN_SRC 
+chmod g-w
+
+#+END_SRC
+Quita los permisos de escritura al grupo
+#+BEGIN_SRC 
+chmod 777
+
+#+END_SRC
+Cambia los permisos a lectura, escritura y ejecución para todxs.
+
+* Utilidades
+
+** history
+=history= muestra los comandos usados.
+ - =history -c= limpia la historia
+ - =history |grep [comando]=, muestra la historia de ese comando
+
+** time
+=time [comando]=, muestra el tiempo de ejecución del comando
+** diff
+A=diff= compara archivos línea por línea.
+* find
+=find [ruta] [opciones] [expresión]=
+- =-name=, busca por nombre
+- =-size=, busca por tamaño.
+- =iname=, busca en modo sensitivo.
+
+Buscas archivos o directorios desde la línea de comandos. Puedes
+buscar filtrando por:
+- Permisos
+- Propiedad
+- Fecha/hora de modificación
+- Tamaño
+** Solo find
+Si solo lanzamos =find=, nos devolverá los archivos, directorios y
+subdirectorios por debajo del lugar donde nos encontramos:
+
+#+BEGIN_SRC sh
+pwd
+
+#+END_SRC
+: /home/flow/ownCloud/docs/softwarelibre/bash
+
+Estamos en =/home/flow/ownCloud/docs/softwarelibre/bash=, vamos a ver
+qué contiene este directorio:
+
+#+BEGIN_SRC sh
+find
+
+#+END_SRC
+
+#+RESULTS:
+| 0                  |
+| ./Readme.org       |
+| ./.#Readme.org     |
+| ./licitaciones.csv |
+| ./rera_aragon.csv  |
+| ./#Readme.org#     |
+| ./Readme.org~      |
+
+Que es lo mismo que hacer =find .= o =find . -print=.
+
+** find con ruta, filtro y término
+
+Pero normalmente lo utilizaremos siguiendo esta estructura:
+
+#+BEGIN_EXAMPLE
+find ruta filtro-de-búsqueda término-de-búsqueda
+#+END_EXAMPLE
+
+** otra ruta
+Podemos poner otra ruta:
+
+#+BEGIN_SRC shell :results output
+find ~/ownCloud/docs/softwarelibre/
+
+#+END_SRC
+
+#+BEGIN_QUOTE
+Atención: si no ponemos la opción =:results algo= y superamos las 999
+líneas, no obtendremos la salida de lo ejecutado.
+#+END_QUOTE
+
+** ejemplo find Readme.org
+Vamos a buscar ahora todos los archivos =Readme.org= en ese
+directorio con la opción =-name=
+
+#+BEGIN_SRC sh :results output
+find ~/ownCloud/docs/softwarelibre -name Readme.org
+#+END_SRC
+
+** ejemplo find comodines
+Y también podemos incluir /comodines/, si quisiéramos todos los
+archivos =*.org=:
+
+#+BEGIN_SRC sh :results output
+find ~/ownCloud/docs/softwarelibre -name *.org
+
+#+END_SRC
+
+** find regexp en archivo
+Y si no queremos todos los archivos sino alguno en concreto, por
+ejemplo, que contuviera /bash/:
+
+#+BEGIN_SRC sh :results html
+find ~/ownCloud/docs/softwarelibre -name *bash*.org
+
+#+END_SRC
+
+** find tamaño de archivos
+O tamaños de archivos:
+
+#+BEGIN_SRC shell :results html
+find . -size +1M
+
+#+END_SRC
+
+** find tamaño de directorios
+O de directorios
+
+#+BEGIN_SRC shell :results html
+find ~/ -folder +300M
+#+END_SRC
+
+** find tipo de archivo
+O tipo de archivo:
+
+#+BEGIN_SRC shell :results html
+find . -type f *.org
+#+END_SRC
+
+** find encontrar archivos y borrarlos
+O encontrar archivos más antiguos que un año y borrarlos:
+#+BEGIN_EXAMPLE
+find .cache/ -type f -atime +365 -exec rm \;
+#+END_EXAMPLE
+
+** find encontrar y ordenar
+Encontrar y ordenar
+
+#+BEGIN_SRC shell :results html
+find ~/Descargas/ -size +30M | sort -hr
+#+END_SRC
+
+** find script bash
+Y programar:
+
+#+BEGIN_EXAMPLE
+find ./ -name "*.png" | sort | while read file; do tesseract $file "`basename $file" | sed 's/\.[[:alnum:]]*$//'`.txt -l spa -psm 3; done
+#+END_EXAMPLE
+
+Donde:
+- Encontramos los archivos del tipo =png= sobre la carpeta elegida
+- Los ordenamos con =sort=
+- Empezamos bucle con =while=
+- Ejecutamos =tesseract= (herramienta OCR) sobre cada archivo =$file=
+- Cambiamos el nombre y el tipo a =txt=.
+
+* head
+
+El comando =head= muestra, por defecto, las diez primeras líneas de un archivo.
+
+#+BEGIN_SRC shell :results html
+head rera_aragon.csv
+
+#+END_SRC
+
+** head con otro número de líneas
+Si queremos un número de líneas distintas, tan solo tenemos que
+ponerlo como argumento del comando. Por ejemplo, si solo queremos 4 líneas:
+
+#+BEGIN_SRC sh
+head -4 rera_aragon.csv
+#+END_SRC
+
+* tail
+
+Si =head= nos mostraba las diez primeras líneas de un archivo, el
+comando =tail= muestra las 10 últimas líneas de un archivo.
+
+ #+BEGIN_SRC shell :results html
+tail rera_aragon.csv
+#+END_SRC
+
+** tail modificar nº líneas
+Y también podemos modificar el número de líneas que salen
+especificándolo como argumento. Por ejemplo, si queremos las últimas
+cinco líneas:
+
+#+BEGIN_SRC shell :results html
+tail -5 rera_aragon.csv
+
+#+END_SRC
+
+#+BEGIN_SRC shell :results html
+tail -n2 rera_aragon.csv
+
+#+END_SRC
+
+* head y tail
+
+Vistos estos dos comandos, =head= y =tail=, se pueden combinar para
+que la salida de uno sirva como entrada de otro, y de esta manera,
+saber qué contiene una línea en concreto.
+
+La concatenación de comandos lo hacemos con la tubería =|=. La tubería
+o /pipe/ sirve para pasar la ejecución de un comando a otro.
+
+** Línea nº 30
+Si quisiéramos saber el contenido de la línea número treinta del
+fichero, mostraríamos las 30 primeras líneas con =head -30= y lo
+concatenaríamos con =tail -1= para saber la última de esas 30 primeras
+líneas:
+
+#+BEGIN_SRC sh :results html
+head -30 rera_aragon.csv | tail -1
+
+#+END_SRC
+
+** concatenación de tres comandos
+Otro ejemplo, concatenando tres comandos: =head=, =tail= y =cut=:
+
+#+BEGIN_SRC sh :results html
+head -n20 rera_aragon.csv | tail -n5 | cut -c1-8
+
+#+END_SRC
+
+* Sobre los datos
+** cut
+Para filtrar columnas
+** sed
+Para reemplazar
+** split
+Para dividir en varios archivos
+** sort
+para ordenar
+
+* Referencias bibliográficas                                             :OK:
+- Find: http://www.binarytides.com/linux-find-command-examples/
+- Aristarain, Manuel & Tigas, Mike & Merril, Jeremy B. (2014) /Scraping PDFs with Tabula/. URL: https://s3.amazonaws.com/media.miketigas.com/files/20140627/20140627-tabula-IRE2014-withnotes.pdf
+- Crucianelli, Sandra. (2013) /Herramientas digitales para periodistas/. Centro Knight para el Periodismo en las Américas de la Universidad de la Universidad de Texas. URL: https://knightcenter.utexas.edu/books/HDPP.pdf
+- García Santiago, Lola. (2003) /Extraer y visualizar información en Internet: el Web Mining/. Gijón: Ediciones Trea
+- Gray, Jonathan & Bounegru, Liliana & Chambers, Lucy. (2012) /Data Journalism Handbook/. European Journalism Centre y Open Knowledge Foundation. URL: http://datajournalismhandbook.org/
+- Kayser-Brill, Nicolas. (2014) /Data wants to be free! (and clean)/. Medialab-Prado. URL: http://bit.ly/free-clean
+- Méndez Rodriguez, Eva Mª. (2002) /Metadatos y Recuperación de información: estándares, problemas y aplicabilidad en bibliotecas digitales/. Gijón: Trea
+- Nguyen, Dan. (2010) /Chapter 3: Turning PDFs to Text/. Propublica, Journalism in the Public Interest. URL: https://www.propublica.org/nerds/item/turning-pdfs-to-text-doc-dollars-guide
+- Nguyen, Dan. (2010) /Chapter 5: Getting Text Out of an Image-Only PDF/. ProPublica, Journalism in the Public Interest. URL: https://www.propublica.org/nerds/item/image-to-text-ocr-and-imagemagick
+- Schoolofdata, (2014) /Obteniendo datos de los PDF/. Web: School of Data. URL: http://es.schoolofdata.org/obteniendo-datos-de-los-pdfs/
+- Cómo utilizar /Google OCR/,  https://www.youtube.com/watch?v=DPJJON26Do4
+- Introducción al scraping de /PDF/, http://www.irekia.euskadi.eus/es/news/11703-introduccion-google-refine-curso-periodismo-datos
